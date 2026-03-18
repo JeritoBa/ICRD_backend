@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer")
 const transporter = nodemailer.createTransport({
     host: "smtp.sendgrid.net",
     port: 465,
+    secure: true,
     auth: {
         user: "apikey",
         pass: process.env.TWILIO_SENDGRID_KEY
