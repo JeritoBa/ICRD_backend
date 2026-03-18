@@ -51,7 +51,7 @@ async function getRecent() {
         LEFT JOIN space ON event.space_id = space.id
         LEFT JOIN scenario ON event.scenario_id = scenario.id
         LEFT JOIN discipline ON event.discipline_id = discipline.id
-        ORDER BY event.start_date DESC LIMIT 15`
+        ORDER BY event.start_date DESC`
     )
 
     return result.rows
