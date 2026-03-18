@@ -37,7 +37,7 @@ async function checkDates(initDate, finishDate, spaceId = null) {
 async function getRecent() {
     const result = await pool.query(
         `
-        SELECT * FROM event GROUP BY id ORDER BY start_date DESC LIMIT 15
+        SELECT * FROM event GROUP BY id ORDER BY start_date
         `
     )
 
