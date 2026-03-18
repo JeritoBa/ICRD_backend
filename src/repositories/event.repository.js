@@ -23,9 +23,10 @@ async function checkDates(initDate, finishDate, spaceId = null) {
         const result = await pool.query(
             `SELECT event.*, space.name AS space_name, scenario.name AS scenario_name, scenario.location AS scenario_location, discipline.name AS discipline_name
             FROM event
-            LEFT JOIN space ON event.space_id= space.id
+            LEFT JOIN space ON event.space_id = space.id
             LEFT JOIN scenario ON event.scenario_id = scenario.id
-            LEFT JOIN discipline ON event.discipline_id = discipline.id`,
+            LEFT JOIN discipline ON event.discipline_id = discipline.id
+            WHERE event.space_id = $1 AND event.start_date < $2 AND event.finish_date > $3`,
             [spaceId, finishDate, initDate]
         )
         return result.rows
@@ -33,11 +34,10 @@ async function checkDates(initDate, finishDate, spaceId = null) {
     const result = await pool.query(
         `SELECT event.*, space.name AS space_name, scenario.name AS scenario_name, scenario.location AS scenario_location, discipline.name AS discipline_name
             FROM event
-            LEFT JOIN space ON event.space_id= space.id
+            LEFT JOIN space ON event.space_id = space.id
             LEFT JOIN scenario ON event.scenario_id = scenario.id
-            LEFT JOIN discipline ON event.discipline_id = discipline.id`,
-
-
+            LEFT JOIN discipline ON event.discipline_id = discipline.id
+            WHERE event.start_date < $1 AND event.finish_date > $2`,
         [finishDate, initDate]
     )
     return result.rows
@@ -46,9 +46,12 @@ async function checkDates(initDate, finishDate, spaceId = null) {
 // GET
 async function getRecent() {
     const result = await pool.query(
-        `
-        SELECT * FROM event GROUP BY id ORDER BY start_date
-        `
+        `SELECT event.*, space.name AS space_name, scenario.name AS scenario_name, scenario.location AS scenario_location, discipline.name AS discipline_name
+        FROM event
+        LEFT JOIN space ON event.space_id = space.id
+        LEFT JOIN scenario ON event.scenario_id = scenario.id
+        LEFT JOIN discipline ON event.discipline_id = discipline.id
+        ORDER BY event.start_date DESC LIMIT 15`
     )
 
     return result.rows
