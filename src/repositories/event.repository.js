@@ -21,20 +21,21 @@ For example:
 async function checkDates(initDate, finishDate, spaceId = null) {
     if (spaceId) {
         const result = await pool.query(
-            `SELECT * FROM event WHERE space_id = $1 AND start_date < $2 AND finish_date > $3`,
+            `SELECT event.*, space.name AS space_name, scenario.name AS scenario_name, scenario.location AS scenario_location, discipline.name AS discipline_name
+            FROM event
+            LEFT JOIN space ON event.space_id= space.id
+            LEFT JOIN scenario ON event.scenario_id = scenario.id
+            LEFT JOIN discipline ON event.discipline_id = discipline.id`,
             [spaceId, finishDate, initDate]
         )
         return result.rows
     }
     const result = await pool.query(
         `SELECT event.*, space.name AS space_name, scenario.name AS scenario_name, scenario.location AS scenario_location, discipline.name AS discipline_name
-            FROM event 
-            LEFT JOIN space 
-            ON event.space_id= space.id
-            LEFT JOIN scenario   
-            ON event.scenario_id = scenario.id
-            LEFT JOIN discipline 
-            ON event.discipline_id = discipline.id`,
+            FROM event
+            LEFT JOIN space ON event.space_id= space.id
+            LEFT JOIN scenario ON event.scenario_id = scenario.id
+            LEFT JOIN discipline ON event.discipline_id = discipline.id`,
 
 
         [finishDate, initDate]
