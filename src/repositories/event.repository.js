@@ -27,7 +27,16 @@ async function checkDates(initDate, finishDate, spaceId = null) {
         return result.rows
     }
     const result = await pool.query(
-        `SELECT * FROM event WHERE start_date < $1 AND finish_date > $2`,
+        `SELECT event.*, space.name AS space_name, scenario.name AS scenario_name, scenario.location AS scenario_location, discipline.name AS discipline_name
+            FROM event 
+            LEFT JOIN space 
+            ON event.space_id= space.id
+            LEFT JOIN scenario   
+            ON event.scenario_id = scenario.id
+            LEFT JOIN discipline 
+            ON event.discipline_id = discipline.id`,
+
+
         [finishDate, initDate]
     )
     return result.rows
