@@ -56,3 +56,4 @@ async function updateSpaceStatusService(id, status){
 
 module.exports = {getSpacesService, createSpaceService, deleteSpaceService, updateSpaceService,
     updateSpaceStatusService}
+
