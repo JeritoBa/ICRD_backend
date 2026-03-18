@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer")
 
 // Gmail Transporter
 const transporter = nodemailer.createTransport({
-    service: "smtp.sendgrid.net",
+    host: "smtp.sendgrid.net",
     port: 587,
     auth: {
         user: "apikey",
