@@ -1,38 +1,37 @@
 const nodemailer = require("nodemailer")
 
-// Gmail Transporter — forced IPv4 (Render free tier has no IPv6)
+// Gmail Transporter
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    service: "smtp.sendgrid.net",
     port: 587,
-    secure: false,
-    family: 4,  // force IPv4, evita ENETUNREACH en Render
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-    },
-    connectionTimeout: 10000,
-    greetingTimeout:   10000,
-    socketTimeout:     15000
+        user: "apikey",
+        pass: process.env.TWILIO_SENDGRID_KEY
+    }
 })
 
+// Send user regsitration
 async function send(data) {
     const { addressee, subject, description } = data
-    return transporter.sendMail({
-        from: process.env.EMAIL_USER,
+
+    return await transporter.sendMail({
+        from: process.env.EMAIL_USER, // Sender
         to: addressee,
         subject,
         html: description
     })
 }
 
-async function sendImportant(data) {
+
+async function sendImportant(data){ 
     const { addressee, subject, description } = data
-    return transporter.sendMail({
+
+    return await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: addressee,
         subject,
         html: description,
-        headers: {
+        header: {
             "X-Priority": "1",
             "X-MSMail-Priority": "High",
             "Importance": "high"
@@ -40,9 +39,11 @@ async function sendImportant(data) {
     })
 }
 
+// Send Email of event creation
+
 async function sendEmail(emails, subject, message) {
-    return transporter.sendMail({
-        from: process.env.EMAIL_USER,
+    await transporter.sendMail({
+        from:process.env.EMAIL_USER,
         bcc: emails,
         subject,
         html: message
